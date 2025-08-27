@@ -46,4 +46,3 @@ if uploaded_file:
                     st.warning("⚠️ " + tip_txt)
                 else:
                     st.success("✅ " + tip_txt)
-           
