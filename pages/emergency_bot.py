@@ -7,6 +7,9 @@ st.title("🚑 응급상황 대처 · 자가진단 챗봇")
 st.info("증상이나 상태를 입력하면 AI가 응급대처 및 병원 방문 필요 여부에 대해 안내합니다. 심각한 응급상황일 경우 즉시 119로 연락하세요.")
 
 api_key = st.secrets.get("OPENAI_API_KEY")
+if not api_key:
+    st.error("❗️ OpenAI API 키가 설정되지 않았습니다. .streamlit/secrets.toml 파일을 확인하세요.")
+    st.stop()
 
 client = OpenAI(api_key=api_key)
 
@@ -37,8 +40,16 @@ def ask_emergency_bot(chat_history, user_msg):
             messages=messages,
             max_tokens=400,
         )
+        if not response or not getattr(response, "choices", None):
+            return "AI로부터 응답을 받지 못했습니다. 다시 시도해 주세요."
         out_msg = response.choices[0].message.content.strip() if hasattr(response.choices[0], "message") else None
+        if not out_msg:
+            return "AI가 이해하지 못했습니다. 질문을 다르게 해보세요."
         return out_msg
+    except Exception as e:
+        st.error(f"OpenAI API 호출 오류: {str(e)}")
+        return "AI 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+
 def tts_gtts(text, lang='ko'):
     try:
         tts = gTTS(text=text, lang=lang)
@@ -46,6 +57,9 @@ def tts_gtts(text, lang='ko'):
         tts.write_to_fp(fp)
         fp.seek(0)
         return fp.read()
+    except Exception as e:
+        st.warning(f"gTTS 변환 오류: {str(e)}")
+        return None
 
 if "emergency_chat" not in st.session_state:
     st.session_state["emergency_chat"] = []
