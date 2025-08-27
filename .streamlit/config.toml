@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#43B581"              # 건강/치유 이미지의 싱그러운 그린 (메인 버튼 등)
+backgroundColor = "#F8F9F4"           # 따뜻한 아이보리 (전체 배경)
+secondaryBackgroundColor = "#D4F3E0"  # 밝은 민트 (사이드바, 카드 배경)
+textColor = "#353535"                 # 부드러운 진회색 (텍스트)
+font = "sans serif"                   # 보기 좋은 기본 폰트streamlit run app.py
