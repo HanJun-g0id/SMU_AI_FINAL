@@ -46,3 +46,5 @@ if uploaded_file:
                     st.warning("⚠️ " + tip_txt)
                 else:
                     st.success("✅ " + tip_txt)
+            # TTS 음성 안내
+            st.audio(text_to_speech(result_txt + " " + tip_txt, language='ko')["bytes"], format="audio/wav")
