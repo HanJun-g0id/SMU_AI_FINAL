@@ -47,7 +47,6 @@ if user_input:
         st.session_state["mental_chat"].append(("user", user_input))
         st.session_state["mental_chat"].append(("assistant", bot_ans))
 
-# 채팅창 출력 + TTS 오류 진단 및 안정 처리
 for role, msg in st.session_state["mental_chat"]:
     with st.chat_message(role):
         st.write(msg)
