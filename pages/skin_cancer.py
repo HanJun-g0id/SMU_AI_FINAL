@@ -22,7 +22,7 @@ if uploaded_image:
     st.image(image, caption="업로드된 피부 사진", width=300)
 
     if st.button("진단 분석 시작"):
-        with st.spinner("AI가 피부 상태를 분석하고 있습니다..."):
+        with st.spinner("AI가 피부 상태를 분석하고 있습니다.."):
             # 예시 결과
             benign_prob = 0.75
             malignant_prob = 0.25
