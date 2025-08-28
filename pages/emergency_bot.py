@@ -38,7 +38,7 @@ def ask_emergency_bot(chat_history, user_msg):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=400,
+            max_tokens=700,
         )
         if not response or not getattr(response, "choices", None):
             return "AI로부터 응답을 받지 못했습니다. 다시 시도해 주세요."
