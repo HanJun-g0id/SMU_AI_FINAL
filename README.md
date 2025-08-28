@@ -96,19 +96,53 @@ AI 기술을 심플한 UI와 통합하여 개인 건강관리와 의료 정보 �
 
 ## 💡 사용 방법
 
-1. `requirements.txt` 기반으로 패키지 설치  
-2. `.streamlit/secrets.toml`에 OpenAI API 키 입력  
-3. Streamlit 앱 실행  
-4. 브라우저에서 다양한 챗봇·분석 기능 직접 사용!
-5. TTS(음성 안내)는 gTTS 기반, ffmpeg 설치 필요:
+1. 프로젝트 폴더에서 아래 명령어로 필수 패키지를 설치합니다.
+- `pip install -r requirements.txt`
+
+2. `.streamlit/secrets.toml` 파일에 본인의 OpenAI API 키를 입력합니다.
+- OPENAI_API_KEY = “sk-…”
+
+3. 프로젝트 루트에서 Streamlit 앱을 실행합니다.
+- `streamlit run app.py`
+
+4. 웹 브라우저에서 [http://localhost:8501](http://localhost:8501)로 접속하여
+챗봇, 피부암 진단 등 다양한 기능을 직접 사용할 수 있습니다.
+
+5. TTS(음성 안내) 기능은 gTTS 기반이며, ffmpeg가 운영체제에 설치되어 있어야 합니다.
+- MacOS: `brew install ffmpeg`
+- Ubuntu: `sudo apt install ffmpeg`
+- Windows: ffmpeg 공식 사이트에서 설치 후 환경변수에 등록
+
+---
+
+## 🧬 모델 설명
+
+이 프로젝트에서 사용된 피부암 진단 모델은 TensorFlow/Keras 기반의 CNN(Convolutional Neural Network) 구조를 활용하여,  
+피부 병변 이미지(224x224)로 양성/악성을 분류하는 딥러닝 모델입니다.
+
+- 학습 데이터: 공개 피부암 이미지 데이터셋(Kaggle, ISIC 등)
+- 입력: (224, 224, 3) RGB 피부 병변 이미지
+- 출력: 클래스별 확률(예: [benign, malignant])
+- 저장 포맷: `skin_cancer_models.h5` (Keras h5 파일)
+- 사용 목적: 피부 사진 업로드 시, AI가 양성/악성 확률로 예측 결과 안내.  
+  주의: 실제 진단·치료 시 반드시 의료 전문가의 판정과 병행해야 함.
+
+모델 상세 구조/성능 등은 코드와 함께 제공된 학습 코드, 평가 결과 참고.
 
 ---
 
 ## 🚨 주의 사항
 
-- 모든 의료 조언/진단은 정보와 가이드일 뿐, 반드시 전문가 상담/치료를 병행할 것
-- **API키, secrets.toml 등은 절대 깃허브에 업로드 금지! (.gitignore 설정 필수)**
-- TTS·AI 결과는 완전 자동 생성이므로 검증/주의 필요
+- 이 서비스의 모든 안내, 진단 결과, 조언은 참고용 정보이며,
+실제 질병 진단·치료는 반드시 **의료 전문가와 상담**해야 합니다.
+
+- **API 키(.streamlit/secrets.toml), 모델 파일(.h5), 환경 설정 등
+주요 파일은 깃허브에 업로드하지 마세요!**
+- `.gitignore`에 반드시 포함하여 보안 사고와 파일 크기 이슈를 예방하세요.
+
+- TTS 및 챗봇 AI 답변은 자동 생성된 결과이며,
+실제 의료 또는 심리 상담과 다를 수 있으므로,
+반드시 최종 판단은 전문가에게 문의하시기 바랍니다.
 
 ---
 
