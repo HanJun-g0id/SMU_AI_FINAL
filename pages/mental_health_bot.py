@@ -16,7 +16,7 @@ def ask_mental_bot(user_msg):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=400,
+        max_tokens=700,
     )
     # 에러 처리: 응답이 없거나 content가 None일 때
     if not response or not hasattr(response, "choices") or not response.choices:
