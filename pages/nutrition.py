@@ -1,64 +1,60 @@
 import streamlit as st
-from PIL import Image
-from gtts import gTTS
-import io
+import openai
 
-st.title("🥗 식사 영양성분 분석")
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# 사용자 건강 정보 입력
-st.sidebar.header("개인 건강 정보")
-age = st.sidebar.number_input("나이", 20, 100, 30)
-health_condition = st.sidebar.selectbox(
-    "건강 상태",
-    ["정상", "당뇨병", "고혈압", "심장질환", "신장질환"]
-)
-activity_level = st.sidebar.selectbox(
-    "활동량",
-    ["낮음", "보통", "높음"]
+st.set_page_config(page_title="맞춤형 식단 추천", page_icon="🥗")
+
+st.title("🥗 맞춤형 식단 추천 서비스")
+st.markdown(
+    """
+    사용자의 나이, 건강 상태, 활동량 정보를 바탕으로  
+    AI가 최적의 맞춤 식단을 추천해드립니다.  
+    건강한 식습관을 시작해 보세요!  
+    """
 )
 
-# 이미지 업로드
-uploaded_file = st.file_uploader("식단 사진을 업로드해주세요", type=['jpg', 'jpeg', 'png'])
+# 사용자 건강 정보 입력 섹션 박스로 구분
+with st.form("user_info_form"):
+    st.header("개인 건강 정보 입력")
+    age = st.number_input("나이", min_value=10, max_value=100, value=30, help="10세 이상 입력하세요")
+    health_condition = st.selectbox(
+        "건강 상태",
+        options=["정상", "당뇨병", "고혈압", "심장질환", "신장질환"],
+        help="본인 건강 상태에 가장 가까운 항목 선택"
+    )
+    activity_level = st.selectbox(
+        "활동량",
+        options=["낮음", "보통", "높음"],
+        help="현재 신체 활동량을 선택하세요"
+    )
+    submit = st.form_submit_button("식단 추천 받기")
 
-def tts_gtts(text, lang='ko'):
-    try:
-        tts = gTTS(text=text, lang=lang)
-        fp = io.BytesIO()
-        tts.write_to_fp(fp)
-        fp.seek(0)
-        return fp.read()
-    except Exception as e:
-        st.warning(f"TTS 변환 오류: {str(e)}")
-        return None
+def generate_diet_plan(age, health_condition, activity_level):
+    prompt = (
+        f"사용자 나이: {age}세, 건강 상태: '{health_condition}', 활동량: '{activity_level}'.\n"
+        "아래 형식에 맞춰 맞춤형 식단을 작성하세요.\n\n"
+        "🍽️ 맞춤 식단 추천\n"
+        "- 아침: \n"
+        "- 점심: \n"
+        "- 저녁: \n"
+        "- 간식: \n\n"
+        "✅ 영양 균형과 건강 상태에 맞는 조언도 포함해 주세요."
+    )
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=500,
+        temperature=0.7,
+    )
+    return response.choices[0].message.content.strip()
 
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="업로드된 음식", use_column_width=True)
+if submit:
+    with st.spinner("AI가 맞춤 식단을 생성 중입니다..."):
+        diet_plan = generate_diet_plan(age, health_condition, activity_level)
+    st.success("✅ 맞춤 식단이 준비되었습니다!")
+    st.markdown("### 🍽️ 맞춤 식단 추천")
+    st.markdown(diet_plan)
 
-    if st.button("영양성분 분석하기"):
-        with st.spinner("AI가 분석 중입니다..."):
-            # AI 분석 결과 예시
-            result_txt = "칼로리: 350kcal. 탄수화물: 45g. 단백질: 25g. 지방: 12g."
-            if health_condition == "당뇨병":
-                tip_txt = "주의: 당뇨 환자에게는 탄수화물 함량이 높을 수 있습니다. 혈당 관리를 위해 채소를 더 드세요."
-            else:
-                tip_txt = "균형잡힌 영양소 구성입니다."
-
-            st.success("분석 완료!")
-            col1, col2 = st.columns(2)
-            with col1:
-                st.subheader("📊 영양성분")
-                st.metric("칼로리", "350 kcal")
-                st.metric("탄수화물", "45g")
-                st.metric("단백질", "25g")
-                st.metric("지방", "12g")
-            with col2:
-                st.subheader("💡 개인 맞춤 조언")
-                if health_condition == "당뇨병":
-                    st.warning("⚠️ " + tip_txt)
-                else:
-                    st.success("✅ " + tip_txt)
-
-            audio_bytes = tts_gtts(result_txt + " " + tip_txt, lang='ko')
-            if audio_bytes:
-                st.audio(audio_bytes, format="audio/mp3")
+    # 선택적으로 추가 정보 혹은 다음 단계 안내
+    st.info("궁금하신 점은 언제든 질문해주세요!")
