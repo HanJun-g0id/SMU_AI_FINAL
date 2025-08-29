@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
-from streamlit_TTS import text_to_speech
+from gtts import gTTS
+import io
 
 st.title("🥗 식사 영양성분 분석")
 
@@ -18,6 +19,17 @@ activity_level = st.sidebar.selectbox(
 
 # 이미지 업로드
 uploaded_file = st.file_uploader("식단 사진을 업로드해주세요", type=['jpg', 'jpeg', 'png'])
+
+def tts_gtts(text, lang='ko'):
+    try:
+        tts = gTTS(text=text, lang=lang)
+        fp = io.BytesIO()
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()
+    except Exception as e:
+        st.warning(f"TTS 변환 오류: {str(e)}")
+        return None
 
 if uploaded_file:
     image = Image.open(uploaded_file)
@@ -46,5 +58,7 @@ if uploaded_file:
                     st.warning("⚠️ " + tip_txt)
                 else:
                     st.success("✅ " + tip_txt)
-            # TTS 음성 안내
-            st.audio(text_to_speech(result_txt + " " + tip_txt, language='ko')["bytes"], format="audio/wav")
+
+            audio_bytes = tts_gtts(result_txt + " " + tip_txt, lang='ko')
+            if audio_bytes:
+                st.audio(audio_bytes, format="audio/mp3")
