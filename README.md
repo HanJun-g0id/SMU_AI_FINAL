@@ -1,7 +1,7 @@
 # 🏥 AI 건강 도움 서비스
 
 **AI·ML, Streamlit, OpenAI, gTTS 기반의 개인 맞춤 건강관리 웹앱**
-Streamlit Site : https://smuaifinal-puxnqji5gelrzqxmdrkjiq.streamlit.app/
+- Streamlit Site : https://smuaifinal-puxnqji5gelrzqxmdrkjiq.streamlit.app/
 
 ---
 
