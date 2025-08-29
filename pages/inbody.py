@@ -1,16 +1,26 @@
 import streamlit as st
-import pandas as pd
-from streamlit_TTS import text_to_speech
+from gtts import gTTS
+import io
 
 st.title("💪 인바디 결과 맞춤 건강관리")
 
 uploaded_pdf = st.file_uploader("인바디 결과 PDF를 업로드해주세요", type=['pdf'])
 
+def tts_gtts(text, lang='ko'):
+    try:
+        tts = gTTS(text=text, lang=lang)
+        fp = io.BytesIO()
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()
+    except Exception as e:
+        st.warning(f"TTS 변환 오류: {str(e)}")
+        return None
+
 if uploaded_pdf:
     st.success("인바디 결과가 업로드되었습니다!")
     if st.button("분석 시작"):
         with st.spinner("PDF를 분석하고 있습니다.."):
-            # 예시 결과 (실제 분석 텍스트로 교체 가능)
             main_result = "체중 70.5kg, 근육량 30.2kg, 체지방률 18.5퍼센트, BMI 23.1, 기초대사율 1650kcal입니다."
             guide = "근육량이 약간 부족하니 주 3회 근력 운동을 추천합니다. 단백질은 체중 곱하기 1.5g씩 섭취하고, 충분한 수분을 드세요."
             full_txt = main_result + " " + guide
@@ -36,5 +46,10 @@ if uploaded_pdf:
                 st.markdown("### 🍽️ 맞춤 식단\n- 단백질: 체중 × 1.5g, 탄수화물 250g, 지방 67g")
             with tab3:
                 st.markdown("### 🌙 생활습관\n- 충분한 수면, 규칙적 식사, 수분 섭취")
-            # TTS 안내
-            st.audio(text_to_speech(full_txt, language='ko')["bytes"], format="audio/wav")
+
+            audio_bytes = tts_gtts(full_txt, lang='ko')
+            if audio_bytes:
+                st.audio(audio_bytes, format="audio/mp3")
+
+else:
+    st.info("인바디 결과 PDF를 업로드 해주세요.")
