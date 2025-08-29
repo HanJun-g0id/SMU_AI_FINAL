@@ -14,3 +14,4 @@ langchain_experimental
 tabulate
 chromadb
 pysqlite3-binary
+gtts
