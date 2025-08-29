@@ -16,13 +16,12 @@ AI 기술을 심플한 UI와 통합하여 개인 건강관리와 의료 정보 �
 ---
 
 ## 🎯 주요 기능
-### 🍽️ 음식 영양 분석
-- **음식 영양 분석:** 사진 업로드, 영양성분 안내, 개인 건강 조언  
+### 🍽️ 맞춤형 식단 추천
+- **사용자 신체 상태 분석:** 신체 상태 입력, 식사별 추천 식단 안내, 개인 건강 조언  
 - 영양 분석 메인 화면  
-  ![영양 분석 메인](Image/NutritionalAnalysis_Main.png)
+  ![영양 분석 메인](Image/CustomizedMealRecommendation_Main.png)
 - 분석 결과 화면  
-  ![건강한 경우](Image/NutritionalAnalysis_Display2.png)
-  ![문제가 있을 경우](Image/NutritionalAnalysis_Display3.png)
+  ![](Image/CustomizedMealRecommendation_Display.png)
 
 ### 💪 인바디 결과 분석
 - **인바디 결과 분석:** PDF 업로드, 체성분 분석, 맞춤 운동·식단 추천 
