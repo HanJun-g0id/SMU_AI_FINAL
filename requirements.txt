@@ -14,5 +14,6 @@ langchain_experimental
 tabulate
 chromadb
 pysqlite3-binary
+streamlit
 streamlit-TTS
 pydub
